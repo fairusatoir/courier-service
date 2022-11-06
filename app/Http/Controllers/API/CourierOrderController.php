@@ -12,9 +12,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Validator;
 
-use function PHPUnit\Framework\isEmpty;
-use function PHPUnit\Framework\isNull;
-
 class CourierOrderController extends Controller
 {
 
