@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\API\CallbackController;
 use App\Http\Controllers\API\CourierOrderController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -21,14 +22,24 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::get('/test',[CourierOrderController::class, 'index']);
 
+Route::prefix('courier')->group(function () {
+    Route::prefix('1.0')->group(function () {
+        Route::get('/', function () {return "<h1>Welcome to API courier service</h1>";});
 
-Route::prefix('1.0')->group(function () {
-    Route::get('/', function () {
-        return "<h1>Welcome to API courier service</h1>";
+
+        Route::post('/orders',[CourierOrderController::class, 'index']);
+
+
+        Route::post('/calculate-order',[CourierOrderController::class, 'calculatePrice']);
     });
 
 
-    Route::post('/orders',[CourierOrderController::class, 'index']);
-    Route::post('/calculate-order',[CourierOrderController::class, 'calculatePrice']);
+    Route::prefix('borzo')->group(function () {
+        Route::prefix('1.0')->group(function () {
 
+        Route::post('/callback',[CallbackController::class, 'BorzoCallback']);
+            
+
+        });
+    });
 });
