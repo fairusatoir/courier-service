@@ -32,42 +32,43 @@ class CourierOrderController extends Controller
      */
     public function index(Request $request)
     {
-        $service = "List Order"; 
-        $idRequest = Str::uuid()->toString();
+        return "<h1>Welcome to Testing API courier service</h1>";
+        // $service = "List Order"; 
+        // $idRequest = Str::uuid()->toString();
 
-        try {
-            LogFormatter::start($idRequest,$service,$request->all());
+        // try {
+        //     LogFormatter::start($idRequest,$service,$request->all());
 
-            /** Validation */
-            $rulesAdd = [
-            ];
-            $messageValidationAdd = [
-            ];
+        //     /** Validation */
+        //     $rulesAdd = [
+        //     ];
+        //     $messageValidationAdd = [
+        //     ];
             
-            $rules = array_merge($this->rulesGlobal, $rulesAdd);
-            $messageValidation = array_merge($this->messageValidationGlobal, $messageValidationAdd);
+        //     $rules = array_merge($this->rulesGlobal, $rulesAdd);
+        //     $messageValidation = array_merge($this->messageValidationGlobal, $messageValidationAdd);
 
-            $validator = Validator::make($request->all(), $rules, $messageValidation);
+        //     $validator = Validator::make($request->all(), $rules, $messageValidation);
 
-            if(!$validator->passes()){
-                LogFormatter::badRequest($idRequest,$service,$validator->errors()->all());
-                return ApiFormatter::badRequest($idRequest, 'Failed',$validator->errors()->all());
-            }
+        //     if(!$validator->passes()){
+        //         LogFormatter::badRequest($idRequest,$service,$validator->errors()->all());
+        //         return ApiFormatter::badRequest($idRequest, 'Failed',$validator->errors()->all());
+        //     }
 
-            /** Get env vendor */
-            $endpoint = ValidateEnv::isEnvActive($request, $idRequest, $service);
+        //     /** Get env vendor */
+        //     $endpoint = ValidateEnv::isEnvActive($request, $idRequest, $service);
 
-            /** Hit Service */
-            $data = BorzoService::getListOrder($request, $idRequest, $endpoint);
+        //     /** Hit Service */
+        //     $data = BorzoService::getListOrder($request, $idRequest, $endpoint);
 
-            /** Response */
-            LogFormatter::ok($idRequest,$service,$data);
-            return ApiFormatter::ok($idRequest, 'Success', $data);
+        //     /** Response */
+        //     LogFormatter::ok($idRequest,$service,$data);
+        //     return ApiFormatter::ok($idRequest, 'Success', $data);
             
-        } catch (Exception $ex) {
-            LogFormatter::error($idRequest,$service,$ex);
-            return ApiFormatter::error($idRequest,'Failed',json_encode($ex));
-        }
+        // } catch (Exception $ex) {
+        //     LogFormatter::error($idRequest,$service,$ex);
+        //     return ApiFormatter::error($idRequest,'Failed',json_encode($ex));
+        // }
     }
 
     /**
