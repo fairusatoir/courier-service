@@ -15,36 +15,43 @@ class CallbackController extends Controller
      */
     public function BorzoCallback(Request $request)
     {        
-        return "null";
-        // $service = "List Order"; 
-        // $idRequest = Str::uuid()->toString();
+        $service = "Borzo Callback"; 
+        $idRequest = Str::uuid()->toString();
+        $signature = $request->HTTP_X_DV_SIGNATURE;
+        $data = $request->all();
+        $vendorEnv = [
+                'vendor' => 'BOR1'
+                'mode' => 'sit'
+            ]
 
-        // try {
-        //     LogFormatter::start($idRequest,$service,$request->all());
-
-        //     $signature = $request->header('HTTP_X_DV_SIGNATURE');
-        //     if(!$signature){
-        //         return ApiFormatter::ok($idRequest, 'Success', $data);
-
-        //     }
-
-        //     if (!isset($_SERVER['HTTP_X_DV_SIGNATURE'])) { 
-        //         echo 'Error: Signature not found'; 
-        //         exit; 
-        //     } 
+        try {
+            LogFormatter::start($idRequest,$service,
+                array_merge($request->all(), ['signature' => $signature]));
             
-        //     $data = file_get_contents('php://input'); 
+            /** Validation data callback */
+            if(!$signature){
+                LogFormatter::badRequest($idRequest,$service,'Signature not found');
+                return ApiFormatter::badRequest($idRequest, 'Signature not found');
+            }
             
-        //     $signature = hash_hmac('sha256', $data, '3D052694C5EDEBD52EE9E3E53783BA5D055DF7B4'); 
-        //     if ($signature != $_SERVER['HTTP_X_DV_SIGNATURE']) { 
-        //         echo 'Error: Signature is not valid'; 
-        //         exit; 
-        //     } 
+            /** Get vendor env data */
+            $endpoint = ValidateEnv::isEnvActive($vendorEnv, $idRequest, $service);
             
-        //     echo $data; 
-        // } catch (Exception $ex) {
-        //     LogFormatter::error($idRequest,$service,$ex);
-        //     return ApiFormatter::error($idRequest,'Failed',json_encode($ex));
-        // }
+            /** Validation data with signature */
+            $signature = hash_hmac('sha256', $data, $endpoint->env[0]->keyCallback);
+            if ($signature != $_SERVER['HTTP_X_DV_SIGNATURE']) { 
+                LogFormatter::badRequest($idRequest,$service,'Signature is not valid');
+                return ApiFormatter::badRequest($idRequest, 'Signature is not valid',);
+            } 
+
+            /** Business Process */
+            
+            
+            LogFormatter::ok($idRequest,$service,$data);
+            return ApiFormatter::ok($idRequest, 'Success', []);
+        } catch (Exception $ex) {
+            LogFormatter::error($idRequest,$service,$ex);
+            return ApiFormatter::error($idRequest,'Failed',json_encode($ex));
+        }
     }
 }
