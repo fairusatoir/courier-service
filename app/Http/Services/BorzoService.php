@@ -2,6 +2,7 @@
 
 namespace App\Http\Services;
 
+use App\Http\Entity\BorzoEntity;
 use Illuminate\Http\Request;
 
 class BorzoService
@@ -44,9 +45,11 @@ class BorzoService
      */
     public static function orderPriceCalculation(Request $request, $idRequest, $endpoint)
     { 
-        return MakeRequest::_post(
+        return BorzoEntity::LimitOrderPriceCalculation( 
+            MakeRequest::_post(
             self::initHeader($endpoint->env[0]->key), 
             $endpoint->env[0]->endpoint."/calculate-order", 
-            $request, $idRequest );
+            $request, $idRequest )
+        );
     }
 }
