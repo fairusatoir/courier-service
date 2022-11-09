@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Helpers\ApiFormatter;
+use App\Helpers\LogFormatter;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
@@ -20,9 +21,9 @@ class CallbackController extends Controller
         $signature = $request->HTTP_X_DV_SIGNATURE;
         $data = $request->all();
         $vendorEnv = [
-                'vendor' => 'BOR1'
+                'vendor' => 'BOR1',
                 'mode' => 'sit'
-            ]
+        ];
 
         try {
             LogFormatter::start($idRequest,$service,
@@ -38,14 +39,14 @@ class CallbackController extends Controller
             $endpoint = ValidateEnv::isEnvActive($vendorEnv, $idRequest, $service);
             
             /** Validation data with signature */
-            $signature = hash_hmac('sha256', $data, $endpoint->env[0]->keyCallback);
+            $signature = hash_hmac('sha256', json_encode($data), $endpoint->env[0]->keyCallback);
             if ($signature != $_SERVER['HTTP_X_DV_SIGNATURE']) { 
                 LogFormatter::badRequest($idRequest,$service,'Signature is not valid');
                 return ApiFormatter::badRequest($idRequest, 'Signature is not valid',);
             } 
 
             /** Business Process */
-            
+                        
             
             LogFormatter::ok($idRequest,$service,$data);
             return ApiFormatter::ok($idRequest, 'Success', []);
