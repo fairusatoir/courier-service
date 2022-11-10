@@ -135,7 +135,7 @@ class CourierOrderController extends Controller
                 'data.type'                 => 'required|in:standard,same_day',
                 'data.matter'               => 'max:4999',
                 'data.vehicle_type_id'      => 'required|numeric|in:1,2,3,7,8',
-                'data.total_weight_kg'      => 'required_if:selection,same_day',
+                'data.total_weight_kg'      => 'required_if:data.type,same_day',
                 'data.insurance_amount'     => 'numeric|min:0',
                 'data.is_client_notification_enabled' => 'boolean',
                 'data.is_contact_person_notification_enabled' => 'boolean',
@@ -144,7 +144,7 @@ class CourierOrderController extends Controller
                 'data.backpayment_details'  => 'max:300',
                 'data.is_motobox_required'  => 'boolean',
                 'data.payment_method'       => 'string|in:cash,non_cash,bank_card',
-                'data.bank_card_id'         => 'numeric|required_if:selection,bank_card',
+                'data.bank_card_id'         => 'numeric|required_if:data.payment_method,bank_card',
                 'data.promo_code'           => '',
                 'data.points.*.address'     => 'required|array',
             ];
