@@ -135,7 +135,7 @@ class CourierOrderController extends Controller
                 'data.type'                 => 'required|in:standard,same_day',
                 'data.matter'               => 'max:4999',
                 'data.vehicle_type_id'      => 'required|numeric|in:1,2,3,7,8',
-                'data.total_weight_kg'      => 'required|required_if:selection,same_day',
+                'data.total_weight_kg'      => 'required_if:selection,same_day',
                 'data.insurance_amount'     => 'numeric|min:0',
                 'data.is_client_notification_enabled' => 'boolean',
                 'data.is_contact_person_notification_enabled' => 'boolean',
@@ -166,11 +166,9 @@ class CourierOrderController extends Controller
                 return ApiFormatter::badRequest($idRequest, 'Failed',$validator->errors()->all());
             }
 
-            if($request->data->type = 'standard' && count($request->data->points) > 99 ){
+            if(count($request->data['points']) > 99 ){
                 LogFormatter::badRequest($idRequest,$service,'Order standard type maximum 99');
                 return ApiFormatter::badRequest($idRequest, 'Failed','Order standard type maximum 99');
-            }elseif($request->data->type = 'same_day' && count($request->data->points) > 99 ){
-
             }
 
             /** Get env vendor */
