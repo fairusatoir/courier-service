@@ -16,7 +16,7 @@ class BorzoEntity
     public static function mappingOrderPriceCalculation($raw)
     {
 
-        if($raw->is_successful = 'true'){
+        if($raw->is_successful == 'true'){
             $data = [
                 'is_successful' => $raw->is_successful ?? "",
                 'type' => $raw->orders->type ?? "",

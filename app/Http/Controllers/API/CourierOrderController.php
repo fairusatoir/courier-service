@@ -171,6 +171,21 @@ class CourierOrderController extends Controller
                 return ApiFormatter::badRequest($idRequest, 'Failed','Order standard type maximum 99');
             }
 
+            /** Filter Parameters */
+            $dataReq = $request->all();
+
+            if(in_array($request->data['type'],['same_day'])){
+                unset($dataReq['data']['total_weight_kg']);
+                $request->replace($dataReq);
+            }
+
+            if(in_array($request->data['payment_method'],['bank_card'])){
+                unset($dataReq['data']['bank_card_id']);
+                $request->replace($dataReq);
+            }
+
+            $request->replace($dataReq);
+
             /** Get env vendor */
             $endpoint = ValidateEnv::isEnvActive($request, $idRequest, $service);
 
