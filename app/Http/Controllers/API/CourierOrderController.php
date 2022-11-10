@@ -144,9 +144,9 @@ class CourierOrderController extends Controller
                 'data.backpayment_details'  => 'max:300',
                 'data.is_motobox_required'  => 'boolean',
                 'data.payment_method'       => 'string|in:cash,non_cash,bank_card',
-                'data.bank_card_id'         => 'numeric|required_if:data.payment_method,bank_card',
+                'data.bank_card_id'         => 'numeric|nullable|required_if:data.payment_method,bank_card',
                 'data.promo_code'           => '',
-                'data.points.*.address'     => 'required|array',
+                'data.points.*.address'     => 'required',
             ];
             $messageValidationAdd = [
                 'data.vehicle_type_id.required' => 'Select the vehicle used',
