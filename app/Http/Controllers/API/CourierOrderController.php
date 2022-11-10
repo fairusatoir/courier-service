@@ -127,8 +127,9 @@ class CourierOrderController extends Controller
         $service = "Order Price Calculation";
         $idRequest = Str::uuid()->toString();
 
+        LogFormatter::start($idRequest,$service,$request->all());
+        
         try {
-            LogFormatter::start($idRequest,$service,$request->all());
 
             /** Validation */
             $rulesAdd = [
