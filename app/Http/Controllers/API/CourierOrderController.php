@@ -33,7 +33,7 @@ class CourierOrderController extends Controller
     public function index(Request $request)
     {
         return "<h1>Welcome to Testing API courier service</h1>";
-        // $service = "List Order"; 
+        // $service = "List Order";
         // $idRequest = Str::uuid()->toString();
 
         // try {
@@ -44,7 +44,7 @@ class CourierOrderController extends Controller
         //     ];
         //     $messageValidationAdd = [
         //     ];
-            
+
         //     $rules = array_merge($this->rulesGlobal, $rulesAdd);
         //     $messageValidation = array_merge($this->messageValidationGlobal, $messageValidationAdd);
 
@@ -64,7 +64,7 @@ class CourierOrderController extends Controller
         //     /** Response */
         //     LogFormatter::ok($idRequest,$service,$data);
         //     return ApiFormatter::ok($idRequest, 'Success', $data);
-            
+
         // } catch (Exception $ex) {
         //     LogFormatter::error($idRequest,$service,$ex);
         //     return ApiFormatter::error($idRequest,'Failed',json_encode($ex));
@@ -124,7 +124,7 @@ class CourierOrderController extends Controller
      */
     public function calculatePrice(Request $request)
     {
-        $service = "Order Price Calculation"; 
+        $service = "Order Price Calculation";
         $idRequest = Str::uuid()->toString();
 
         try {
@@ -132,11 +132,30 @@ class CourierOrderController extends Controller
 
             /** Validation */
             $rulesAdd = [
-                'data.points.*.address' => 'required',
+                'data.type'                 => 'required|in:standard,same_day',
+                'data.matter'               => 'max:4999',
+                'data.vehicle_type_id'      => 'required|numeric|in:1,2,3,7,8',
+                'data.total_weight_kg'      => 'required|required_if:selection,same_day',
+                'data.insurance_amount'     => 'numeric|min:0',
+                'data.is_client_notification_enabled' => 'boolean',
+                'data.is_contact_person_notification_enabled' => 'boolean',
+                'data.is_route_optimizer_enabled' => 'boolean',
+                'data.loaders_count'        => 'numeric|min:0|max:11',
+                'data.backpayment_details'  => 'max:300',
+                'data.is_motobox_required'  => 'boolean',
+                'data.payment_method'       => 'string|in:cash,non_cash,bank_card',
+                'data.bank_card_id'         => 'numeric|required_if:selection,bank_card',
+                'data.promo_code'           => '',
+                'data.points.*.address'     => 'required|array',
             ];
             $messageValidationAdd = [
+                'data.vehicle_type_id.required' => 'Select the vehicle used',
+                'data.vehicle_type_id.in'       => 'Select the vehicle used',
+                'data.type.required'            => 'type order cannot be empty',
+                'data.type.in'                  => 'Select the type order used: standard, same_day',
                 'data.points.*.address.required' => 'Address cannot be empty',
             ];
+
             $rules = array_merge($this->rulesGlobal, $rulesAdd);
             $messageValidation = array_merge($this->messageValidationGlobal, $messageValidationAdd);
 
@@ -145,6 +164,13 @@ class CourierOrderController extends Controller
             if(!$validator->passes()){
                 LogFormatter::badRequest($idRequest,$service,$validator->errors()->all());
                 return ApiFormatter::badRequest($idRequest, 'Failed',$validator->errors()->all());
+            }
+
+            if($request->data->type = 'standard' && count($request->data->points) > 99 ){
+                LogFormatter::badRequest($idRequest,$service,'Order standard type maximum 99');
+                return ApiFormatter::badRequest($idRequest, 'Failed','Order standard type maximum 99');
+            }elseif($request->data->type = 'same_day' && count($request->data->points) > 99 ){
+
             }
 
             /** Get env vendor */
@@ -156,7 +182,7 @@ class CourierOrderController extends Controller
             /** Response */
             LogFormatter::ok($idRequest,$service,$data);
             return ApiFormatter::ok($idRequest, 'Success', $data);
-            
+
         } catch (Exception $ex) {
             LogFormatter::error($idRequest,$service,$ex);
             return ApiFormatter::error($idRequest,'Failed',json_encode($ex));

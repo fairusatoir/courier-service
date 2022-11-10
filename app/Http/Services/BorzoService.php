@@ -45,7 +45,7 @@ class BorzoService
      */
     public static function orderPriceCalculation(Request $request, $idRequest, $endpoint)
     { 
-        return BorzoEntity::LimitOrderPriceCalculation( 
+        return BorzoEntity::mappingOrderPriceCalculation( 
             MakeRequest::_post(
             self::initHeader($endpoint->env[0]->key), 
             $endpoint->env[0]->endpoint."/calculate-order", 
