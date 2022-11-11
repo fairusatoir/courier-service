@@ -14,17 +14,6 @@ use Validator;
 
 class CourierOrderController extends Controller
 {
-
-    private $rulesGlobal = [
-        'mode' => 'required',
-        'vendor' => 'required',
-    ];
-
-    private $messageValidationGlobal = [
-        'mode.required' => 'Environment not selected',
-        'vendor.required' => 'Select the Vendor to use',
-    ];
-
     /**
      * List of courier orders.
      *
@@ -132,7 +121,7 @@ class CourierOrderController extends Controller
         try {
 
             /** Validation */
-            $rulesAdd = [
+            $rules = [
                 'data.type'                 => 'required|in:standard,same_day',
                 'data.matter'               => 'max:4999',
                 'data.vehicle_type_id'      => 'required|numeric|in:1,2,3,7,8',
@@ -149,16 +138,13 @@ class CourierOrderController extends Controller
                 'data.promo_code'           => '',
                 'data.points.*.address'     => 'required',
             ];
-            $messageValidationAdd = [
+            $messageValidation = [
                 'data.vehicle_type_id.required' => 'Select the vehicle used',
                 'data.vehicle_type_id.in'       => 'Select the vehicle used',
                 'data.type.required'            => 'type order cannot be empty',
                 'data.type.in'                  => 'Select the type order used: standard, same_day',
                 'data.points.*.address.required' => 'Address cannot be empty',
             ];
-
-            $rules = array_merge($this->rulesGlobal, $rulesAdd);
-            $messageValidation = array_merge($this->messageValidationGlobal, $messageValidationAdd);
 
             $validator = Validator::make($request->all(), $rules, $messageValidation);
 

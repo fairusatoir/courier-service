@@ -32,7 +32,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 });
 
 /** Courier Main Service Route */
-Route::group(['middleware' => ['auth:sanctum']], function () {
+Route::group(['middleware' => ['auth:sanctum','validRequest']], function () {
     Route::prefix('courier')->group(function () {
         Route::prefix('1.0')->group(function () {
             
