@@ -11,7 +11,7 @@ class ApiFormatter
 
     public static function ok($idRequest=null, $message = null, $data = null)
     {
-        if(isNull($data)){
+        if($data == null){
             return self::createApi($idRequest, 404, "Not Found", $data);
         }
         return self::createApi($idRequest, 200, $message, $data);
