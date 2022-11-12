@@ -3,6 +3,7 @@
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\CallbackController;
 use App\Http\Controllers\API\CourierOrderController;
+use App\Http\Controllers\API\VendorController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -31,6 +32,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/logout', [AuthController::class, 'logout']);
 });
 
+
+
 /** Courier Main Service Route */
 Route::group(['middleware' => ['auth:sanctum','validRequest']], function () {
     Route::prefix('courier')->group(function () {
@@ -41,16 +44,18 @@ Route::group(['middleware' => ['auth:sanctum','validRequest']], function () {
             });
 
             Route::post('/orders', [CourierOrderController::class, 'index']);
-
             Route::post('/calculate-order', [CourierOrderController::class, 'calculatePrice']);
-        
+
+            Route::prefix('vendors')->group(function () {
+                Route::get('/', [VendorController::class, 'index']);
+                Route::get('/{id}', [VendorController::class, 'show']);
+            });        
         });
 
 
-        Route::prefix('borzo')->group(function () {
+        Route::prefix('callback')->group(function () {
             Route::prefix('1.0')->group(function () {
-
-                Route::post('/callback', [CallbackController::class, 'BorzoCallback']);
+                Route::post('/borzo', [CallbackController::class, 'BorzoCallback']);
             });
         });
     });

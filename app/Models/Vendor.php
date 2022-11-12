@@ -2,28 +2,32 @@
 
 namespace App\Models;
 
+use App\Models\Base\BaseModel;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 
-class Vendor extends Model
+class Vendor extends BaseModel
 {
     use HasFactory;
-
-    /** scope data */
-    public function scopeActive($query)
-    {
-        return $query
-            ->where('active', 1)
-            ->where(function($query) {
-                $query->whereDate("deleted_at",">",Carbon::today())
-                    ->orWhereNull('deleted_at');
-            });
-    }
 
     /** Relation */
     public function env()
     {
         return $this->hasMany(VendorEndpoint::class,'vendor_id')->active();
+    }
+
+    public function order_type()
+    {
+        return $this->hasMany(OrderCourierType::class,'vendor_id')->active();
+    }
+
+    public function vehicle_type()
+    {
+        return $this->hasMany(VehicleCourierType::class,'vendor_id')->active();
+    }
+
+    public function payment_type()
+    {
+        return $this->hasMany(PaymentCourierType::class,'vendor_id')->active();
     }
 }

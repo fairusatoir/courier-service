@@ -50,7 +50,7 @@ class CallbackController extends Controller
             
             LogFormatter::ok($idRequest,$service,$data);
             return ApiFormatter::ok($idRequest, 'Success', []);
-        } catch (Exception $ex) {
+        } catch (\Throwable $ex) {
             LogFormatter::error($idRequest,$service,$ex);
             return ApiFormatter::error($idRequest,'Failed',json_encode($ex));
         }

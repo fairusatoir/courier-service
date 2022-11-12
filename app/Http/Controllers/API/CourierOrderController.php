@@ -11,7 +11,6 @@ use App\Models\Vendor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Validator;
-use Exception;
 
 class CourierOrderController extends Controller
 {
@@ -187,7 +186,7 @@ class CourierOrderController extends Controller
             LogFormatter::ok($idRequest,$service,$data);
             return ApiFormatter::ok($idRequest, 'Success', $data);
 
-        } catch (\Exception $ex) {
+        } catch (\Throwable $ex) {
             LogFormatter::error($idRequest,$service,$ex);
             return ApiFormatter::error($idRequest,'Failed',$ex);
         }

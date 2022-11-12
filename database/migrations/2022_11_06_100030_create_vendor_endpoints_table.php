@@ -19,10 +19,11 @@ return new class extends Migration
             $table->foreign('vendor_id')->references('id')->on('vendors');
             $table->enum('mode',['sit', 'stg', 'prod']);
             $table->string('endpoint')->nullable(false);
-            $table->string('key');
-            $table->string('username');
-            $table->string('password');
-            $table->text('description');
+            $table->string('key')->nullable(true);
+            $table->string('keyCallback')->nullable(true);
+            $table->string('username')->nullable(true);
+            $table->string('password')->nullable(true);
+            $table->text('description')->nullable(true);
             $table->boolean('active')->default(true);
             $table->timestamps();
             $table->softDeletes();
