@@ -4,11 +4,16 @@ namespace App\Helpers;
 
 use Str;
 
+use function PHPUnit\Framework\isNull;
+
 class ApiFormatter
 {
 
     public static function ok($idRequest=null, $message = null, $data = null)
     {
+        if(isNull($data)){
+            return self::createApi($idRequest, 404, "Not Found", $data);
+        }
         return self::createApi($idRequest, 200, $message, $data);
     }
 
