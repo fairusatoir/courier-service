@@ -2,6 +2,8 @@
 
 namespace App\Helpers;
 
+use Str;
+
 class ApiFormatter
 {
 
@@ -23,7 +25,7 @@ class ApiFormatter
     public static function createApi($idRequest=null, $code = null, $message = null, $data = null)
     {
         $header = [
-            "X-Request-Id"=>$idRequest
+            "X-Request-Id"=>$idRequest ?? Str::uuid()->toString()
         ];
 
         $body = [
