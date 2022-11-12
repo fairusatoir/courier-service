@@ -27,7 +27,7 @@ class LogFormatter
 
     public static function error($idRequest = null, $service = null, $ex=null)
     {
-        Log::info([
+        Log::error([
             'idRequest'=> $idRequest,
             'message'=> "[ERROR][".$service."] ".$ex->getMessage(),
             'file'=> $ex->getFile().' | line'.$ex->getLine(),

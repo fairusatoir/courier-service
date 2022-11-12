@@ -11,6 +11,7 @@ use App\Models\Vendor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Validator;
+use Exception;
 
 class CourierOrderController extends Controller
 {
@@ -122,10 +123,14 @@ class CourierOrderController extends Controller
 
             /** Validation */
             $rules = [
+                /** Minimal Request */
                 'data.type'                 => 'required|in:standard,same_day',
                 'data.matter'               => 'max:4999',
                 'data.vehicle_type_id'      => 'required|numeric|in:1,2,3,7,8',
                 'data.total_weight_kg'      => 'required_if:data.type,same_day',
+                'data.points.*.address'     => 'required',
+
+                /** Additional */
                 'data.insurance_amount'     => 'numeric|min:0',
                 'data.is_client_notification_enabled' => 'boolean',
                 'data.is_contact_person_notification_enabled' => 'boolean',
@@ -136,14 +141,13 @@ class CourierOrderController extends Controller
                 'data.payment_method'       => 'string|in:cash,non_cash,bank_card',
                 'data.bank_card_id'         => 'numeric|nullable|required_if:data.payment_method,bank_card',
                 'data.promo_code'           => '',
-                'data.points.*.address'     => 'required',
             ];
             $messageValidation = [
-                'data.vehicle_type_id.required' => 'Select the vehicle used',
-                'data.vehicle_type_id.in'       => 'Select the vehicle used',
-                'data.type.required'            => 'type order cannot be empty',
-                'data.type.in'                  => 'Select the type order used: standard, same_day',
-                'data.points.*.address.required' => 'Address cannot be empty',
+                'data.vehicle_type_id.required' => 'VEHICLE cannot be empty',
+                'data.vehicle_type_id.in'       => 'Vehicle not available ',
+                'data.type.required'            => 'TYPE ORDER cannot be empty',
+                'data.type.in'                  => 'Select the type order used: STANDARD, SAME DAY',
+                'data.points.*.address.required' => 'ADDRESS cannot be empty',
             ];
 
             $validator = Validator::make($request->all(), $rules, $messageValidation);
@@ -161,12 +165,12 @@ class CourierOrderController extends Controller
             /** Filter Parameters */
             $dataReq = $request->all();
 
-            if(in_array($request->data['type'],['same_day'])){
+            if(in_array($request->data['type'] ?? "",['same_day'])){
                 unset($dataReq['data']['total_weight_kg']);
                 $request->replace($dataReq);
             }
 
-            if(in_array($request->data['payment_method'],['bank_card'])){
+            if(in_array($request->data['payment_method'] ?? "",['bank_card'])){
                 unset($dataReq['data']['bank_card_id']);
                 $request->replace($dataReq);
             }
@@ -183,9 +187,9 @@ class CourierOrderController extends Controller
             LogFormatter::ok($idRequest,$service,$data);
             return ApiFormatter::ok($idRequest, 'Success', $data);
 
-        } catch (Exception $ex) {
+        } catch (\Exception $ex) {
             LogFormatter::error($idRequest,$service,$ex);
-            return ApiFormatter::error($idRequest,'Failed',json_encode($ex));
+            return ApiFormatter::error($idRequest,'Failed',$ex);
         }
 
     }
