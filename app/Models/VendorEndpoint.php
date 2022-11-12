@@ -2,22 +2,12 @@
 
 namespace App\Models;
 
+use App\Models\Base\BaseModel;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class VendorEndpoint extends Model
+class VendorEndpoint extends BaseModel
 {
     use HasFactory;
-
-    /** scope data */
-    public function scopeActive($query)
-    {
-        return $query
-            ->where('active', 1)
-            ->where(function($query) {
-                $query->whereDate("deleted_at",">",Carbon::today())
-                    ->orWhereNull('deleted_at');
-            });
-    }
 }
