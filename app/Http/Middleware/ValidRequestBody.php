@@ -32,8 +32,9 @@ class ValidRequestBody
         $validator = Validator::make($request->all(), $rules, $messageValidation);
 
         if(!$validator->passes()){
-            LogFormatter::badRequest(null,"System Validation",$validator->errors()->all());
-            return ApiFormatter::badRequest(null, 'System Validation',$validator->errors()->all());
+            $err = "Not allowed to access";
+            LogFormatter::badRequest(null,$err,$validator->errors()->all());
+            return ApiFormatter::badRequest(null, $err);
         }
 
         return $next($request);
