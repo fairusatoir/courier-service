@@ -12,7 +12,7 @@ class ApiFormatter
     public static function ok($idRequest=null, $message = null, $data = null)
     {
         if($data == null){
-            return self::createApi($idRequest, 404, "Not Found", $data);
+            return self::createApi($idRequest, 404, "Not_Found", $data);
         }
         return self::createApi($idRequest, 200, $message, $data);
     }
@@ -25,6 +25,11 @@ class ApiFormatter
     public static function badRequest($idRequest=null, $message = null, $data = null)
     {
         return self::createApi($idRequest, 400, $message, $data);
+    }
+
+    public static function unAuthorized($idRequest=null, $message = null, $data = null)
+    {
+        return self::createApi($idRequest, 401, $message, $data);
     }
 
     public static function createApi($idRequest=null, $code = null, $message = null, $data = null)

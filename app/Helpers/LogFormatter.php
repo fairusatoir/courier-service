@@ -21,7 +21,13 @@ class LogFormatter
 
     public static function badRequest($idRequest = null, $service = null, $data = null)
     {
-        self::logFormat($idRequest, "BAD REQUEST", $service, $data);
+        self::logFormat($idRequest, "BAD_REQUEST", $service, $data);
+
+    }
+
+    public static function unAuthorized($idRequest = null, $service = null, $data = null)
+    {
+        self::logFormat($idRequest, "UNAUTHORIZED", $service, $data);
 
     }
 
