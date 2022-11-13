@@ -15,6 +15,18 @@ class MakeRequest
     }
 
     /**
+     * Init default header for request
+     *
+     * @return void
+     */
+    private static function initDefautlHeader($header)
+    {
+        return array_merge($header, [
+            'Content-Type: application/json'
+        ]);
+    }
+
+    /**
      * Create Http get request curl
      *
      * @param  \Illuminate\Http\Request  $request
@@ -30,7 +42,7 @@ class MakeRequest
         $curl = curl_init(); 
         curl_setopt($curl, CURLOPT_URL, $url); 
         curl_setopt($curl, CURLOPT_CUSTOMREQUEST, $method); 
-        curl_setopt($curl, CURLOPT_HTTPHEADER, $header); 
+        curl_setopt($curl, CURLOPT_HTTPHEADER, self::initDefautlHeader($header)); 
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true); 
         
         // private $body = [ 
@@ -76,14 +88,13 @@ class MakeRequest
      */
     public static function _post($header, $url, Request $request, $idRequest)
     {
-
         $method = 'POST';
 
         /** Request Factory */
         $curl = curl_init(); 
         curl_setopt($curl, CURLOPT_URL, $url); 
         curl_setopt($curl, CURLOPT_CUSTOMREQUEST, $method); 
-        curl_setopt($curl, CURLOPT_HTTPHEADER, $header); 
+        curl_setopt($curl, CURLOPT_HTTPHEADER, self::initDefautlHeader($header)); 
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true); 
         
         // private $body = [ 
