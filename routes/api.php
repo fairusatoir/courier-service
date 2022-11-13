@@ -19,8 +19,8 @@ use Illuminate\Support\Facades\Route;
 */
 
 /** User Management Route */
-Route::post('/register', [AuthController::class, 'register']);
-Route::post('/login', [AuthController::class, 'login']);
+// Route::post('/register', [AuthController::class, 'register']);
+// Route::post('/login', [AuthController::class, 'login']);
 
 //Protecting Routes
 Route::group(['middleware' => ['auth:sanctum']], function () {
@@ -35,28 +35,31 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
 
 /** Courier Main Service Route */
-Route::group(['middleware' => ['auth:sanctum','validRequest']], function () {
-    Route::prefix('courier')->group(function () {
-        Route::prefix('1.0')->group(function () {
-            
-            Route::get('/welcome', function () {
-                return "<h1>Welcome to API courier service</h1>";
-            });
+Route::prefix('courier')->group(function () {
 
-            Route::post('/orders', [CourierOrderController::class, 'index']);
-            Route::post('/calculate-order', [CourierOrderController::class, 'calculatePrice']);
+    Route::get('/welcome', function () {
+        return "<h1>Welcome to API courier service</h1>";
+    });
 
-            Route::prefix('vendors')->group(function () {
-                Route::get('/', [VendorController::class, 'index']);
-                Route::get('/{id}', [VendorController::class, 'show']);
-            });        
+    Route::group(['prefix' => '1.0', 'middleware' => ['validRequest','AuthAccessToken']], function(){
+
+        Route::get('/welcome', function () {
+            return "<h1>Welcome to API courier service v1.0</h1>";
         });
 
+        Route::post('/orders', [CourierOrderController::class, 'index']);
+        Route::post('/calculate-order', [CourierOrderController::class, 'calculatePrice']);
 
-        Route::prefix('callback')->group(function () {
-            Route::prefix('1.0')->group(function () {
-                Route::post('/borzo', [CallbackController::class, 'BorzoCallback']);
-            });
+        Route::prefix('vendors')->group(function () {
+            Route::get('/', [VendorController::class, 'index']);
+            Route::get('/{id}', [VendorController::class, 'show']);
+        });
+    });
+
+
+    Route::prefix('callback')->group(function () {
+        Route::prefix('1.0')->group(function () {
+            Route::post('/borzo', [CallbackController::class, 'BorzoCallback']);
         });
     });
 });
