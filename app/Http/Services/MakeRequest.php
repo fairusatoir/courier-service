@@ -57,13 +57,8 @@ class MakeRequest
         //     ], 
         // ]; 
 
-        $body = $request->all();
- 
-        $json = json_encode($body['data'], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
-        curl_setopt($curl, CURLOPT_POSTFIELDS, $json); 
-
         /** Handshake Session */
-        self::logFormat($idRequest,'START', $method." ".$url, $header, $body['data']);
+        self::logFormat($idRequest,'START', $method." ".$url, $header);
 
         /** Result Validation */
         $result = curl_exec($curl); 
