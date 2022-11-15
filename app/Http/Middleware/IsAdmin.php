@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Models\User;
+use App\Providers\RouteServiceProvider;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -20,6 +21,7 @@ class IsAdmin
     public function handle(Request $request, Closure $next)
     {
         $user = User::where('id',Auth::id())->first();
+
         if(!$user->role === 'admin'){
             toast('You don\'t have permission','error');
             return redirect()->back();

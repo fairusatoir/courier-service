@@ -3,6 +3,7 @@
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\CallbackController;
 use App\Http\Controllers\API\CourierOrderController;
+use App\Http\Controllers\API\OrderCourierTypeController;
 use App\Http\Controllers\API\VendorController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -47,12 +48,17 @@ Route::prefix('courier')->group(function () {
             return "<h1>Welcome to API courier service v1.0</h1>";
         });
 
-        Route::post('/orders', [CourierOrderController::class, 'index']);
+        Route::post('/orders/data', [CourierOrderController::class, 'index']);
+        Route::post('/orders/courier', [CourierOrderController::class, 'store']);
         Route::post('/calculate-order', [CourierOrderController::class, 'calculatePrice']);
 
         Route::prefix('vendors')->group(function () {
             Route::get('/', [VendorController::class, 'index']);
             Route::get('/{id}', [VendorController::class, 'show']);
+        });
+        
+        Route::prefix('order/type')->group(function () {
+            Route::get('/', [OrderCourierTypeController::class, 'index']);
         });
     });
 
