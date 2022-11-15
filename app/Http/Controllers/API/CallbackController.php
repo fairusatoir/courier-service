@@ -25,7 +25,7 @@ class CallbackController extends Controller
         // return "test";  
         $service = "Borzo Callback";
         $idRequest = Str::uuid()->toString();
-        $signature = $request->header('HTTP_X_DV_SIGNATURE');
+        $signature = $request->header('X-Dv-Signature');
         $data = $request->all();
         $vendorEnv = (object) [
             'vendor' => 'BOR1',
