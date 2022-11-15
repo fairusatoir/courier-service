@@ -41,7 +41,7 @@ class CallbackController extends Controller
 
             /** Validation data callback */
             if (!$signature) {
-                LogFormatter::badRequest($idRequest, $service, 'Signature not found | '.json_encode($request->headers()));
+                LogFormatter::badRequest($idRequest, $service, 'Signature not found | '.$request->headers);
                 return ApiFormatter::badRequest($idRequest, 'Signature not found');
             }
 
@@ -52,7 +52,7 @@ class CallbackController extends Controller
             $hash = hash_hmac('SHA256', json_encode($data), utf8_encode($endpoint->env[0]->keyCallback), false);
             // return $hash;
             if ($signature != $hash) {
-                LogFormatter::badRequest($idRequest, $service, 'Signature isn\'t valid | '.json_encode($request->headers()));
+                LogFormatter::badRequest($idRequest, $service, 'Signature isn\'t valid | '.$request->headers);
                 return ApiFormatter::badRequest($idRequest, 'Signature isn\'t valid',);
             }
 
