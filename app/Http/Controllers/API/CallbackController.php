@@ -25,7 +25,7 @@ class CallbackController extends Controller
         // return "test";  
         $service = "Borzo Callback";
         $idRequest = Str::uuid()->toString();
-        $signature = $request->header('X-Dv-Signature');
+        $signature = $request->header('http_X-Dv-Signature');
         $data = $request->all();
         $vendorEnv = (object) [
             'vendor' => 'BOR1',
@@ -49,7 +49,9 @@ class CallbackController extends Controller
             $endpoint = ValidateEnv::isEnvActive($vendorEnv, $idRequest, $service);
 
             /** Validation data with signature */
-            $hash = hash_hmac('SHA256', json_encode($data), utf8_encode($endpoint->env[0]->keyCallback), false);
+            $dataRaw = str_replace("\\","",json_encode($data));
+            $hash = hash_hmac('SHA256', $dataRaw, $endpoint->env[0]->keyCallback, false);
+
             // return $hash;
             if ($signature != $hash) {
                 LogFormatter::badRequest($idRequest, $service, 'Signature isn\'t valid | '.$request->headers);
