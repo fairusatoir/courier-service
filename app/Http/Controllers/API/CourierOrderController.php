@@ -44,6 +44,10 @@ class CourierOrderController extends Controller
 
             /** Get env vendor */
             $endpoint = ValidateEnv::isEnvActive($request, $idRequest, $service);
+            if ($endpoint == null || $endpoint['env']->isEmpty()) {
+                LogFormatter::badRequest($idRequest, $service, "Vendor Not Active");
+                return ApiFormatter::badRequest($idRequest, 'Failed', "Vendor Not Active");
+            }
 
             /** Hit Service */
             $data = BorzoService::getListOrder($request, $idRequest, $endpoint);
@@ -121,6 +125,10 @@ class CourierOrderController extends Controller
 
             /** Get env vendor */
             $endpoint = ValidateEnv::isEnvActive($request, $idRequest, $service);
+            if ($endpoint == null || $endpoint['env']->isEmpty()) {
+                LogFormatter::badRequest($idRequest, $service, "Vendor Not Active");
+                return ApiFormatter::badRequest($idRequest, 'Failed', "Vendor Not Active");
+            }
 
             \DB::beginTransaction();
 
@@ -271,6 +279,10 @@ class CourierOrderController extends Controller
 
             /** Get env vendor */
             $endpoint = ValidateEnv::isEnvActive($request, $idRequest, $service);
+            if ($endpoint == null || $endpoint['env']->isEmpty()) {
+                LogFormatter::badRequest($idRequest, $service, "Vendor Not Active");
+                return ApiFormatter::badRequest($idRequest, 'Failed', "Vendor Not Active");
+            }
 
             /** Hit Service */
             $data = BorzoService::orderPriceCalculation($request, $idRequest, $endpoint);
@@ -278,7 +290,7 @@ class CourierOrderController extends Controller
             /** Response */
             LogFormatter::ok($idRequest, $service, $data);
             return ApiFormatter::ok($idRequest, 'Success', $data);
-        } catch (\Throwable $ex) {
+        } catch (\Exception $ex) {
             LogFormatter::error($idRequest, $service, $ex);
             return ApiFormatter::error($idRequest, 'Failed', $ex);
         }

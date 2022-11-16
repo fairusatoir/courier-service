@@ -19,12 +19,12 @@ class LogFormatter
 
     public static function badRequest($idRequest = null, $service = null, $data = null)
     {
-        self::logFormat($idRequest, "BAD_REQUEST", $service, $data);
+        self::warning($idRequest, "BAD_REQUEST", $service, $data);
     }
 
     public static function unAuthorized($idRequest = null, $service = null, $data = null)
     {
-        self::logFormat($idRequest, "UNAUTHORIZED", $service, $data);
+        self::warning($idRequest, "UNAUTHORIZED", $service, $data);
     }
 
     public static function error($idRequest = null, $service = null, $ex = null)
@@ -39,6 +39,15 @@ class LogFormatter
     public static function logFormat($idRequest = null, $status = "", $service = null, $data = null)
     {
         Log::info([
+            'idRequest' => $idRequest,
+            'message' => "[" . $status . "][" . $service . "]",
+            'data' => $data
+        ]);
+    }
+
+    public static function warning($idRequest = null, $status = "", $service = null, $data = null)
+    {
+        Log::warning([
             'idRequest' => $idRequest,
             'message' => "[" . $status . "][" . $service . "]",
             'data' => $data

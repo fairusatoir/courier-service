@@ -47,6 +47,10 @@ class CallbackController extends Controller
 
             /** Get vendor env data */
             $endpoint = ValidateEnv::isEnvActive($vendorEnv, $idRequest, $service);
+            if ($endpoint == null || $endpoint['env']->isEmpty()) {
+                LogFormatter::badRequest($idRequest, $service, "Vendor Not Active");
+                return ApiFormatter::badRequest($idRequest, 'Failed', "Vendor Not Active");
+            }
 
             /** Validation data with signature */
             $dataRaw = str_replace("\\","",json_encode($data));

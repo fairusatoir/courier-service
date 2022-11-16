@@ -17,11 +17,6 @@ class ValidateEnv
             ->where("slug", $request->vendor)
             ->first();
 
-        if ($endpoint == null || $endpoint['env']->isEmpty()) {
-            LogFormatter::badRequest($idRequest, $service, "Vendor Not Active");
-            return ApiFormatter::badRequest($idRequest, 'Failed', "Vendor Not Active");
-        }
-
         return $endpoint;
     }
 }
