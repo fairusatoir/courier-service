@@ -33,8 +33,8 @@ class ValidRequestBody
 
         if(!$validator->passes()){
             $err = "Not allowed to access";
-            LogFormatter::badRequest(null,$err,$validator->errors()->all());
-            return ApiFormatter::badRequest(null, $err);
+            LogFormatter::unAuthorized(null,$err,$validator->errors()->all());
+            return ApiFormatter::unAuthorized(null, $err);
         }
 
         return $next($request);
