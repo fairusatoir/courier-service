@@ -27,9 +27,9 @@ class CallbackService
     public static function sendCallback($data, $idRequest, $endpoint)
     {
         $dataResp = MakeRequest::_post(
-            self::initHeader($endpoint->env[0]->key),
-            $endpoint->env[0]->endpoint,
-            $data,
+            [],
+            $endpoint,
+            array('data' => $data),
             $idRequest
         );
 

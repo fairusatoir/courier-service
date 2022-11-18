@@ -22,7 +22,7 @@ class CallbackController extends Controller
      */
     public function BorzoCallback(Request $request)
     {
-        // return "test";  
+        // return "test";
         $service = "Borzo Callback";
         $idRequest = Str::uuid()->toString();
         $signature = $request->header('X-Dv-Signature');
@@ -64,11 +64,11 @@ class CallbackController extends Controller
 
             /** Business Process */
             \DB::beginTransaction();
-            
-            if(!isset($data['event_type']) 
+
+            if(!isset($data['event_type'])
                 || !in_array(
-                    $data['event_type'], 
-                    ['order_created','order_changed','delivery_created','delivery_changed'], 
+                    $data['event_type'],
+                    ['order_created','order_changed','delivery_created','delivery_changed'],
                     true )
                 ){
                 LogFormatter::badRequest($idRequest, $service, 'Event isn\'t valid');
@@ -77,7 +77,7 @@ class CallbackController extends Controller
 
             if(isset($data['order'])){
                 $order = Orders::where('vendor_order_id',$data['order']['order_id'])->first();
-                
+
             }elseif(isset($data['delivery'])){
                 $order = Orders::where('vendor_order_id',$data['delivery']['order_id'])->first();
             }else{
@@ -101,14 +101,14 @@ class CallbackController extends Controller
                 $order->status = $data['delivery']['status'];
             }
 
-            $order->updated_at = Carbon::today();            
+            $order->updated_at = Carbon::today();
             $order->save();
-            
+
             $user = User::where('id',$order->user_id)->first();
             if(isset($user) && $user->url_callback != null && $user->url_callback != "" ){
                 CallbackService::sendCallback($data, $idRequest, $user->url_callback);
             }
-            
+
             \DB::commit();
 
             LogFormatter::ok($idRequest, $service, $data);
