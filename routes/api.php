@@ -42,21 +42,24 @@ Route::prefix('courier')->group(function () {
         return "<h1>Welcome to API courier service</h1>";
     });
 
-    Route::group(['prefix' => '1.0', 'middleware' => ['validRequest','AuthAccessToken']], function(){
+    Route::group(['prefix' => '1.0', 'middleware' => ['AuthAccessToken']], function(){
+
+        // Route with Enviroment
+        Route::group(['middleware' => ['validRequest']], function(){
+            Route::post('/orders/data', [CourierOrderController::class, 'index']);
+            Route::post('/orders/courier', [CourierOrderController::class, 'store']);
+            Route::post('/calculate-order', [CourierOrderController::class, 'calculatePrice']);
+        });
 
         Route::get('/welcome', function () {
             return "<h1>Welcome to API courier service v1.0</h1>";
         });
 
-        Route::post('/orders/data', [CourierOrderController::class, 'index']);
-        Route::post('/orders/courier', [CourierOrderController::class, 'store']);
-        Route::post('/calculate-order', [CourierOrderController::class, 'calculatePrice']);
-
         Route::prefix('vendors')->group(function () {
             Route::get('/', [VendorController::class, 'index']);
             Route::get('/{id}', [VendorController::class, 'show']);
         });
-        
+
         Route::prefix('order/type')->group(function () {
             Route::get('/', [OrderCourierTypeController::class, 'index']);
         });
