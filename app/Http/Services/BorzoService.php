@@ -16,7 +16,7 @@ class BorzoService
     /**
      * Init header for request
      *
-     * @return void
+     * @return \Illuminate\Http\Response
      */
     private static function initHeader($key)
     {
@@ -56,7 +56,7 @@ class BorzoService
      * Calculate order prices and validate parameters before actually placing the order
      *
      * @param  mixed $request
-     * @return void
+     * @return \Illuminate\Http\Response
      */
     public static function getListOrder(Request $request, $idRequest, $endpoint)
     {
@@ -72,13 +72,32 @@ class BorzoService
      * Calculate order prices and validate parameters before actually placing the order
      *
      * @param  mixed $request
-     * @return void
+     * @return \Illuminate\Http\Response
      */
     public static function orderPriceCalculation(Request $request, $idRequest, $endpoint)
     {
         $dataResp = MakeRequest::_post(
             self::initHeader($endpoint->env[0]->key),
             $endpoint->env[0]->endpoint . "/calculate-order",
+            $request,
+            $idRequest
+        );
+
+        self::checkRequiredParams("Calculate",$idRequest, $dataResp);
+        return $dataResp;
+    }
+
+    /**
+     * Get Delivery Interval to Orders
+     *
+     * @param  mixed $request
+     * @return \Illuminate\Http\Response
+     */
+    public static function deliveryInterval(Request $request, $idRequest, $endpoint)
+    {
+        $dataResp = MakeRequest::_get(
+            self::initHeader($endpoint->env[0]->key),
+            $endpoint->env[0]->endpoint . "/delivery-intervals",
             $request,
             $idRequest
         );
@@ -110,7 +129,7 @@ class BorzoService
             unset($dataReq['data']['bank_card_id']);
             $request->replace($dataReq);
         }
-        
+
         return $dataReq;
     }
 }

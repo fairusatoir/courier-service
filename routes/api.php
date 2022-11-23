@@ -33,8 +33,6 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/logout', [AuthController::class, 'logout']);
 });
 
-
-
 /** Courier Main Service Route */
 Route::prefix('courier')->group(function () {
 
@@ -49,7 +47,10 @@ Route::prefix('courier')->group(function () {
             Route::post('/orders/data', [CourierOrderController::class, 'index']);
             Route::post('/orders/courier', [CourierOrderController::class, 'store']);
             Route::post('/calculate-order', [CourierOrderController::class, 'calculatePrice']);
+            Route::get('/delivery-intervals', [CourierOrderController::class, 'deliveryInterval']);
         });
+
+
 
         Route::get('/welcome', function () {
             return "<h1>Welcome to API courier service v1.0</h1>";

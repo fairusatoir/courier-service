@@ -285,4 +285,35 @@ class CourierOrderController extends Controller
             return ApiFormatter::error($idRequest, 'Failed', $ex);
         }
     }
+
+    public function deliveryInterval(Request $request)
+    {
+        $service = "Get Delivery Interval";
+        $idRequest = Str::uuid()->toString();
+        try{
+
+            /** Get env vendor */
+            $endpoint = ValidateEnv::isEnvActive($request, $idRequest, $service);
+            if ($endpoint == null || $endpoint['env']->isEmpty()) {
+                LogFormatter::badRequest($idRequest, $service, "Vendor Not Active");
+                return ApiFormatter::badRequest($idRequest, 'Failed', "Vendor Not Active");
+            }
+
+            /** Hit Service */
+            $data = BorzoService::deliveryInterval($request, $idRequest, $endpoint);
+
+            if(!$data->is_successful == true){
+                $err = "Response Not Valid";
+                LogFormatter::badRequest($idRequest, $service, $err);
+                return ApiFormatter::badRequest($idRequest, 'Failed', $err);
+            }
+
+            /** Response */
+            LogFormatter::ok($idRequest, $service, $data);
+            return ApiFormatter::ok($idRequest, 'Success', $data);
+        }catch (Exception $ex) {
+            LogFormatter::error($idRequest, $service, $ex);
+            return ApiFormatter::error($idRequest, 'Failed', json_encode($ex));
+        }
+    }
 }
