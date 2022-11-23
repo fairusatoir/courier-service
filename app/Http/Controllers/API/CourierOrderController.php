@@ -116,7 +116,7 @@ class CourierOrderController extends Controller
                 ['user_id','=', $idUser],
                 ['client_order_id','=', $request->client_order_id]
             ])->first();
-            
+
             if (!$orderCheck == null) {
                 $err = 'Order already exist';
                 LogFormatter::badRequest($idRequest, $service, $err);
@@ -142,6 +142,8 @@ class CourierOrderController extends Controller
                 'created_at' => Carbon::today()
             ]);
 
+            $request->replace(BorzoService::prepareRequest($request));
+
             /** Hit Service */
             $data = BorzoService::orders($request, $idRequest, $endpoint);
             // $data = ['status'=>'success'];
@@ -153,7 +155,7 @@ class CourierOrderController extends Controller
                 LogFormatter::badRequest($idRequest, $service, $err);
                 return ApiFormatter::notFound($idRequest, '', $err);
             }
-            
+
             $orderResponse->status = 'new';
             $orderResponse->vendor_order_id = $data->order->order_id;
             $orderResponse->updated_at = Carbon::today();
@@ -263,19 +265,7 @@ class CourierOrderController extends Controller
             }
 
             /** Filter Parameters */
-            $dataReq = $request->all();
-
-            if (in_array($request->data['type'] ?? "", ['same_day'])) {
-                unset($dataReq['data']['total_weight_kg']);
-                $request->replace($dataReq);
-            }
-
-            if (in_array($request->data['payment_method'] ?? "", ['bank_card'])) {
-                unset($dataReq['data']['bank_card_id']);
-                $request->replace($dataReq);
-            }
-
-            $request->replace($dataReq);
+            $request->replace(BorzoService::prepareRequest($request));
 
             /** Get env vendor */
             $endpoint = ValidateEnv::isEnvActive($request, $idRequest, $service);

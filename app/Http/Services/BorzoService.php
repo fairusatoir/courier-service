@@ -86,4 +86,31 @@ class BorzoService
         self::checkRequiredParams("Calculate",$idRequest, $dataResp);
         return $dataResp;
     }
+
+    /**
+     * Prepare request body
+     * Rule following https://borzodelivery.com/id/business-api/doc#create-order
+     */
+    public static function prepareRequest(Request $request)
+    {
+        /** Filter Parameters */
+        $dataReq = $request->all();
+
+        /** In same_day orders it is prohibited to set this parameter vehicle_type_id. It will be detected automatically. */
+        if (in_array($request->data['type'] ?? "", ['same_day'])) {
+            unset($dataReq['data']['vehicle_type_id']);
+        }
+
+        /** In same_day orders total_weight_kg parameter is required. Must be greater than 0. */
+        if (in_array($request->data['type'] ?? "", ['same_day'])) {
+            unset($dataReq['data']['total_weight_kg']);
+        }
+
+        if (in_array($request->data['payment_method'] ?? "", ['bank_card'])) {
+            unset($dataReq['data']['bank_card_id']);
+            $request->replace($dataReq);
+        }
+        
+        return $dataReq;
+    }
 }
