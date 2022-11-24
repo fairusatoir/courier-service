@@ -47,7 +47,7 @@ Route::prefix('courier')->group(function () {
             Route::post('/orders/data', [CourierOrderController::class, 'index']);
             Route::post('/orders/courier', [CourierOrderController::class, 'store']);
             Route::post('/calculate-order', [CourierOrderController::class, 'calculatePrice']);
-            Route::get('/delivery-intervals', [CourierOrderController::class, 'deliveryInterval']);
+            Route::post('/delivery-intervals', [CourierOrderController::class, 'deliveryInterval']);
         });
 
 

@@ -31,6 +31,11 @@ class BorzoService
             LogFormatter::error($idRequest, "Borzo Process", $err);
             return ApiFormatter::error($idRequest, 'Failed', $err);
         }
+
+        if ($dataResp->is_successful == false) {
+            LogFormatter::error($idRequest, "Borzo Process", $err);
+            return ApiFormatter::error($idRequest, 'BAD_REQUEST', $err);
+        }
     }
 
     /**
