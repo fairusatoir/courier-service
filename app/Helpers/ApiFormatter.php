@@ -21,7 +21,7 @@ class ApiFormatter
 
     public static function error($idRequest=null, $message = null, $data = null)
     {
-        return self::createApi($idRequest, 500, $message, $data->getMessage());
+        return self::createApi($idRequest, $data->getCode() ? $data->getCode() : 500, $message, $data->getMessage());
     }
 
     public static function badRequest($idRequest=null, $message = null, $data = null)

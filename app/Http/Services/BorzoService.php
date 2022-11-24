@@ -5,6 +5,7 @@ namespace App\Http\Services;
 use App\Helpers\ApiFormatter;
 use App\Helpers\LogFormatter;
 use App\Http\Entity\BorzoEntity;
+use Exception;
 use Illuminate\Http\Request;
 
 class BorzoService
@@ -28,13 +29,15 @@ class BorzoService
     private static function checkRequiredParams($err,$idRequest, $dataResp)
     {
         if (!isset($dataResp->is_successful)) {
-            LogFormatter::error($idRequest, "Borzo Process", $err);
-            return ApiFormatter::error($idRequest, 'Failed', $err);
+            // LogFormatter::badRequest($idRequest, "Borzo Process", $err);
+            // return ApiFormatter::badRequest($idRequest, 'Failed', $err);
+            throw new Exception("Borzo Process Failed",502);
         }
 
-        if ($dataResp->is_successful == false) {
-            LogFormatter::error($idRequest, "Borzo Process", $err);
-            return ApiFormatter::error($idRequest, 'BAD_REQUEST', $err);
+        if ($dataResp->is_successful === false) {
+            // LogFormatter::badRequest($idRequest, "Borzo Process", $err);
+            // return ApiFormatter::badRequest($idRequest, 'BAD_REQUEST', $err);
+            throw new Exception("BAD_REQUEST ".$err,502);
         }
     }
 
@@ -88,7 +91,7 @@ class BorzoService
             $idRequest
         );
 
-        self::checkRequiredParams("Calculate",$idRequest, $dataResp);
+        self::checkRequiredParams("Calculate parameter invalid",$idRequest, $dataResp);
         return $dataResp;
     }
 
@@ -107,7 +110,7 @@ class BorzoService
             $idRequest
         );
 
-        self::checkRequiredParams("Calculate",$idRequest, $dataResp);
+        self::checkRequiredParams("Interval parameter invalid",$idRequest, $dataResp);
         return $dataResp;
     }
 
